@@ -10,22 +10,32 @@ class Vampire {
 
   // Adds the vampire as an offspring of this vampire
   addOffspring(vampire) {
-
+    this.offspring.push(vampire);
+    vampire.creator = this;
   }
 
   // Returns the total number of vampires created by that vampire
   get numberOfOffspring() {
-
+    return this.offspring.length;
   }
 
   // Returns the number of vampires away from the original vampire this vampire is
   get numberOfVampiresFromOriginal() {
+    let numberOfGeneration = 0;
+    let currVamp = this;
 
+    // climb "up" the tree (using iteration), counting nodes, until no boss is found
+    while (currVamp.creator) {
+      currVamp = currVamp.creator;
+      numberOfGeneration++;
+    }
+
+    return numberOfGeneration;
   }
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
   isMoreSeniorThan(vampire) {
-
+    return this.numberOfVampiresFromOriginal <= vampire.numberOfVampiresFromOriginal;
   }
 
   /** Stretch **/
@@ -36,7 +46,40 @@ class Vampire {
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
   closestCommonAncestor(vampire) {
+    let currVamp = {};
 
+    if (this.name === vampire.name) {
+      //self case
+      currVamp = this;
+    } else if (!this.creator || !vampire.creator) {
+      //root case (null || null)
+      currVamp = this.getRoot(this);
+    } else if (this.creator.name === vampire.creator.name) {
+      //same creator
+      currVamp = this.creator;
+    } else {
+      //recursion
+      if (this.isMoreSeniorThan(vampire)) {
+        currVamp = this.closestCommonAncestor(vampire.creator);
+      } else if (vampire.isMoreSeniorThan(this)) {
+        currVamp = this.creator.closestCommonAncestor(vampire);
+        //different level
+      } else {
+        currVamp = this.creator.closestCommonAncestor(vampire.creator);
+        //same level but different branch
+      }
+    }
+    return currVamp;
+  }
+
+  getRoot(vampire) {
+    let currVamp = vampire;
+    // climb "up" the tree (using iteration), counting nodes, until no boss is found
+    if (vampire.creator) {
+      currVamp = this.getRoot(vampire.creator);
+    }
+
+    return currVamp;
   }
 }
 
