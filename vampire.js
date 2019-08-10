@@ -43,13 +43,12 @@ class Vampire {
   // Returns the vampire object with that name, or null if no vampire exists with that name
   vampireWithName(name) {
     let result = null;
-    let check = null;
 
     if (this.name === name) {
       result = this;
     } else {
       for (const child in this.offspring) {
-        check = this.offspring[child].vampireWithName(name);
+        const check = this.offspring[child].vampireWithName(name);
         if (check !== null) {
           result = check;
         }
@@ -76,14 +75,10 @@ class Vampire {
   // Returns an array of all the vampires that were converted after 1980
   get allMillennialVampires() {
     let result = [];
-    let check = [];
 
     for (const child in this.offspring) {
-      check = this.offspring[child].allMillennialVampires;
-
-      if (check.length !== 0) {
-        result = result.concat(check);
-      }
+      const check = this.offspring[child].allMillennialVampires;
+      result = result.concat(check);
     }
     // end of for loop through each branch off the root;
     // no if statment for [] offspring is never needed as the for statement takes care of it
@@ -109,7 +104,7 @@ class Vampire {
       currVamp = this;
     } else if (!this.creator || !vampire.creator) {
       //root case (null || null)
-      currVamp = this.getRoot(this);
+      currVamp = this.getRoot();
     } else if (this.creator.name === vampire.creator.name) {
       //same creator
       currVamp = this.creator;
@@ -128,11 +123,11 @@ class Vampire {
     return currVamp;
   }
 
-  getRoot(vampire) {
-    let currVamp = vampire;
+  getRoot() {
+    let currVamp = this;
     // climb "up" the tree (using iteration), counting nodes, until no boss is found
-    if (vampire.creator) {
-      currVamp = this.getRoot(vampire.creator);
+    if (this.creator) {
+      currVamp = this.creator.getRoot();
     }
 
     return currVamp;
