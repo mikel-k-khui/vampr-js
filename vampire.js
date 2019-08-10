@@ -42,17 +42,32 @@ class Vampire {
 
   // Returns the vampire object with that name, or null if no vampire exists with that name
   vampireWithName(name) {
-    
+    let result = null;
+    let check = null;
+
+    if (this.name === name) {
+      result = this;
+    } else {
+      for (const child in this.offspring) {
+        check = this.offspring[child].vampireWithName(name);
+        if (check !== null) {
+          result = check;
+        }
+      }
+    }
+    // end of for loop through each branch off the root; the if statment for [] offspring is never needed as the for statement takes care of it
+
+    return result;
   }
 
   // Returns the total number of vampires that exist
   get totalDescendents() {
-    
+
   }
 
   // Returns an array of all the vampires that were converted after 1980
   get allMillennialVampires() {
-    
+
   }
 
   /** Stretch **/
@@ -99,20 +114,6 @@ class Vampire {
     return currVamp;
   }
  
-  // Returns the vampire object with that name, or null if no vampire exists with that name
-  vampireWithName(name) {
-
-  }
-
-  // Returns the total number of vampires that exist
-  get totalDescendents() {
-
-  }
-
-  // Returns an array of all the vampires that were converted after 1980
-  get allMillennialVampires() {
-
-  }
 }
 
 module.exports = Vampire;
