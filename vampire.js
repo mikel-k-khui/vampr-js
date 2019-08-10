@@ -75,7 +75,23 @@ class Vampire {
 
   // Returns an array of all the vampires that were converted after 1980
   get allMillennialVampires() {
+    let result = [];
+    let check = [];
 
+    for (const child in this.offspring) {
+      check = this.offspring[child].allMillennialVampires;
+
+      if (check.length !== 0) {
+        result = result.concat(check);
+      }
+    }
+    // end of for loop through each branch off the root;
+    // no if statment for [] offspring is never needed as the for statement takes care of it
+
+    if (this.yearConverted > 1980) {
+      result.push(this);
+    }
+    return result;
   }
 
   /** Stretch **/
